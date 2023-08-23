@@ -11,20 +11,39 @@ export default function App() {
       // There are many ways of copying an array like :
       // const itemsCopy = [...items];
       // return itemsCopy.push(item);
-      // * The most simple one is 👇
+      // The most simple one is 👇
+      // * don't forget that we are using [ADD]
+      // * method from JS using spread syntax
+      // * witch includes copying the array inside of it
       return [...items, item];
     });
   }
 
   function handleDeleteItems(id) {
+    // * don't forget that we are using [DELETE]
+    // * method from JS using filter
     setItems(items => items.filter(item => item.id !== id));
+  }
+
+  function handleToggleItem(id) {
+    // * don't forget that we are using [UPDATE]
+    // * method from JS using map
+    setItems(items =>
+      items.map(item =>
+        item.id === id ? { ...item, packed: !item.packed } : item,
+      ),
+    );
   }
 
   return (
     <div className='app'>
       <Logo />
       <Form onAddItems={handleAddItems} />
-      <PackingList onDeleteItems={handleDeleteItems} items={items} />
+      <PackingList
+        onDeleteItems={handleDeleteItems}
+        onToggleItem={handleToggleItem}
+        items={items}
+      />
       <Stats />
     </div>
   );
@@ -81,7 +100,7 @@ function Form({ onAddItems }) {
   );
 }
 
-function PackingList({ items, onDeleteItems }) {
+function PackingList({ items, onDeleteItems, onToggleItem }) {
   return (
     <div className='list'>
       <ul>
@@ -90,6 +109,7 @@ function PackingList({ items, onDeleteItems }) {
             item={item}
             key={item.id}
             onDeleteItems={onDeleteItems}
+            onToggleItem={onToggleItem}
           />
         ))}
       </ul>
@@ -97,9 +117,14 @@ function PackingList({ items, onDeleteItems }) {
   );
 }
 
-function Item({ item, onDeleteItems }) {
+function Item({ item, onDeleteItems, onToggleItem }) {
   return (
     <li>
+      <input
+        type='checkbox'
+        value={item.packed}
+        onChange={() => onToggleItem(item.id)}
+      />
       <span
         style={item.packed ? { textDecoration: 'line-through' } : {}}
       >
