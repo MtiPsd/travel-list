@@ -2,12 +2,13 @@ import { useState } from 'react';
 
 export default function App() {
   const [items, setItems] = useState([]);
+
   function handleAddItems(item) {
     setItems(items => {
       // we are mutating state in this case
       // ! and this is not what we want
       // * so we have to create a copy of that array
-      // ==========> items.push(item);
+      // items.push(item);
       // There are many ways of copying an array like :
       // const itemsCopy = [...items];
       // return itemsCopy.push(item);
@@ -44,7 +45,7 @@ export default function App() {
         onToggleItem={handleToggleItem}
         items={items}
       />
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -135,11 +136,18 @@ function Item({ item, onDeleteItems, onToggleItem }) {
   );
 }
 
-function Stats() {
+function Stats({ items }) {
+  const numItems = items.length;
+  const numPacked = items.filter(item => item.packed).length;
+  const percentage = Math.round((numPacked / numItems) * 100);
+
   return (
     <footer className='stats'>
       <em>
-        💼 You have X items on your list, and you already have X (X%)
+        {percentage === 100
+          ? 'You got everything! ready to go ✈'
+          : `You have ${numItems} items on your list, and you already
+        have ${numPacked} (${percentage}%) 💼`}
       </em>
     </footer>
   );
