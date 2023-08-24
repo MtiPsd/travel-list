@@ -103,11 +103,35 @@ function Form({ onAddItems }) {
 
 function PackingList({ items, onDeleteItems, onToggleItem }) {
   const [sortBy, setSortBy] = useState('input');
+  let sortedItems;
+  ///////////////////////////////
+  switch (sortBy) {
+    case 'input':
+      sortedItems = items;
+      break;
+
+    case 'description':
+      sortedItems = items
+        .slice()
+        .sort((a, b) => a.description.localeCompare(b.description));
+      break;
+
+    case 'packed':
+      sortedItems = items
+        .slice()
+        .sort((a, b) => Number(a.packed) - Number(b.packed));
+      break;
+
+    default:
+      console.log('It is impossible');
+      break;
+  }
+  ///////////////////////////////
 
   return (
     <div className='list'>
       <ul>
-        {items.map(item => (
+        {sortedItems.map(item => (
           <Item
             item={item}
             key={item.id}
@@ -160,7 +184,7 @@ function Stats({ items }) {
         {percentage === 100
           ? 'You got everything! ready to go ✈'
           : isNaN(percentage)
-          ? 'Add some stuff on your list 💼'
+          ? 'ُStart adding some items to your packing list 🚀'
           : `You have ${numItems} items on your list, and you already
         have ${numPacked} (${percentage}%) 💼`}
       </em>
