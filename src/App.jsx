@@ -13,10 +13,10 @@ export default function App() {
       // const itemsCopy = [...items];
       // return itemsCopy.push(item);
       // The most simple one is 👇
+      return [...items, item];
       // * don't forget that we are using [ADD]
       // * method from JS using spread syntax
       // * witch includes copying the array inside of it
-      return [...items, item];
     });
   }
 
@@ -102,6 +102,8 @@ function Form({ onAddItems }) {
 }
 
 function PackingList({ items, onDeleteItems, onToggleItem }) {
+  const [sortBy, setSortBy] = useState('input');
+
   return (
     <div className='list'>
       <ul>
@@ -114,6 +116,17 @@ function PackingList({ items, onDeleteItems, onToggleItem }) {
           />
         ))}
       </ul>
+
+      <div className='actions'>
+        <select
+          value={sortBy}
+          onChange={e => setSortBy(e.target.value)}
+        >
+          <option value='input'>Sort by input order</option>
+          <option value='description'>Sort by description</option>
+          <option value='packed'>Sort by packed status</option>
+        </select>
+      </div>
     </div>
   );
 }
@@ -146,6 +159,8 @@ function Stats({ items }) {
       <em>
         {percentage === 100
           ? 'You got everything! ready to go ✈'
+          : isNaN(percentage)
+          ? 'Add some stuff on your list 💼'
           : `You have ${numItems} items on your list, and you already
         have ${numPacked} (${percentage}%) 💼`}
       </em>
